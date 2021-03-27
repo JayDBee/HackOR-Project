@@ -1,5 +1,5 @@
 # Example pygame program
-#I was here
+
 # Import and initialize the pygame lib
 import pygame
 
