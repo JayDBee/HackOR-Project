@@ -1,4 +1,4 @@
-import Objects_and_stuff.py
+import Objects_and_stuff
 
 running = True
 
