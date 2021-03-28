@@ -14,30 +14,36 @@ from pygame.locals import (
     K_ESCAPE,
 )
 
-pygame.init()
-# Set up the screen
-screen = pygame.display.set_mode((640, 640))
+start_ticks = 0
+total_ticks = 0
+
 # Icons
 icon = pygame.image.load('ninja.png')
 pygame.display.set_icon(icon)
 
+# images
 ninja = pygame.image.load('ninja.png')
-ninja = pygame.transform.scale(ninja, (50, 50))
+ninja = pygame.transform.scale(ninja, (characters.MAX_SPRITE_SZ, characters.MAX_SPRITE_SZ))
 flag = pygame.image.load('flag.png')
-flag = pygame.transform.scale(flag, (50, 50))
+flag = pygame.transform.scale(flag, (characters.MAX_SPRITE_SZ, characters.MAX_SPRITE_SZ))
 
+# sprites
 mainChar = characters.Sprite(characters.DEFAULT_X, characters.DEFAULT_Y, 0, 0, ninja)
-# (pygame.image.load('ninja.png')))
-# mainChar.image = pygame.transform.scale(mainChar.image, (50, 50))
+obstacle = characters.Sprite(characters.MAX_SCREEN_SZ / 2, 0, 0, 0, flag)
 
-obstacle = characters.Sprite(0, 0, 0, 0, flag)
-# pygame.image.load('flag.png'))
-# obstacle.image = pygame.transform.scale(obstacle.image, (50, 50))
+
+pygame.init()
+
+# Set up the screen
+screen = pygame.display.set_mode((characters.MAX_SCREEN_SZ, characters.MAX_SCREEN_SZ))
 
 
 def render(sprite):
     screen.blit(sprite.image, (sprite.x, sprite.y))
 
+
+# start of game timer
+start_ticks = pygame.time.get_ticks()
 
 # Run until the user asks to quit
 running = True
@@ -51,13 +57,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    '''
-    ##still unusable feature
-    
-    if mainChar.collided_with(obstacle):
-        print("keep going!")
-    '''
-
+    # Track Key presses
     if event.type == pygame.KEYDOWN:
         if event.key == K_RIGHT:
             mainChar.changed_x = .6
@@ -68,22 +68,28 @@ while running:
         elif event.key == K_DOWN:
             mainChar.changed_y = .6
         elif event.key == K_ESCAPE:
+            total_ticks = pygame.time.get_ticks()
+            print("Total time: %2d" % (total_ticks - start_ticks))
             running = False
 
+    # Key lifts
     if event.type == pygame.KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:
             mainChar.changed_x = 0
         elif event.key == K_UP or event.key == K_DOWN:
             mainChar.changed_y = 0
 
-    mainChar.x += mainChar.changed_x
-    mainChar.y += mainChar.changed_y
-
-    # Draw a solid blue circle in the center
-    pygame.draw.circle(screen, (0, 0, 255), (250, 250), 75)
+    if mainChar.collided(obstacle):
+        print("Finished!")
 
     render(mainChar)
     render(obstacle)
+    mainChar.enforce_bounds()
+    mainChar.update_sprite()
+
+    # Draw a solid blue circle in the center
+    pygame.draw.circle(screen, (0, 0, 255), (characters.MAX_SCREEN_SZ / 2, characters.MAX_SCREEN_SZ / 2), 75)
+
     pygame.display.update()
 
 # Done! Time to quit
