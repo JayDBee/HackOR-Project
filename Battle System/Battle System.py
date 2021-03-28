@@ -10,6 +10,9 @@ from pygame.locals import (
     K_z,
 )
 
+health = 100
+
+def enemyattack():
 
 
 pygame.init()
