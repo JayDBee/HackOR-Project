@@ -54,9 +54,8 @@ def render(sprite):
 
 def start():
     # Background Music
-    # Files too large
-    # start_music = mixer.Sound('Menu Music Test 1.wav')
-    # start_music.play(-1)
+    start_music = mixer.Sound('Menu Music Test 1.wav')
+    start_music.play(-1)
     while True:
         # Fill the background with white
         screen.fill((0, 0, 0))
