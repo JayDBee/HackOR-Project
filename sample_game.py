@@ -4,7 +4,10 @@
 # Import characters file
 import pygame
 import sys
+from pygame import mixer
+
 import characters
+import Objects_and_stuff
 
 # import pygame.locals or easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -31,6 +34,9 @@ flag = pygame.transform.scale(flag, (characters.MAX_SPRITE_SZ, characters.MAX_SP
 mainChar = characters.Sprite(characters.DEFAULT_X, characters.DEFAULT_Y, 0, 0, ninja)
 obstacle = characters.Sprite(characters.MAX_SCREEN_SZ / 2, 0, 0, 0, flag)
 
+# Stages
+main_room = Objects_and_stuff.Room(characters.MAX_SCREEN_SZ, characters.MAX_SCREEN_SZ, 255, 255, 255)
+
 pygame.init()
 
 # Set up the screen
@@ -47,6 +53,10 @@ def render(sprite):
 
 
 def start():
+    # Background Music
+    # Files too large
+    # start_music = mixer.Sound('Menu Music Test 1.wav')
+    # start_music.play(-1)
     while True:
         # Fill the background with white
         screen.fill((0, 0, 0))
@@ -62,8 +72,8 @@ def start():
 
         mx, my = pygame.mouse.get_pos()
 
-        start_button = pygame.Rect(50, 100, 200, 50)
-        exit_button = pygame.Rect(50, 200, 200, 50)
+        start_button = pygame.Rect(50, characters.MAX_SCREEN_SZ / 4, characters.MAX_SCREEN_SZ / 2, 50)
+        exit_button = pygame.Rect(50, characters.MAX_SCREEN_SZ / 2, characters.MAX_SCREEN_SZ / 2, 50)
         if start_button.collidepoint((mx, my)):
             if click:
                 main()
@@ -95,6 +105,8 @@ def main():
 
             # Track Key presses
             if event.type == pygame.KEYDOWN:
+                walking_sound = mixer.Sound('Walking Sound Test 1 (1).wav')
+                walking_sound.play()
                 if event.key == K_RIGHT:
                     mainChar.changed_x = .6
                 elif event.key == K_LEFT:
@@ -129,11 +141,42 @@ def main():
         pygame.display.update()
 
 
-def game_over(score):
+def battle_system():
     # Run until the user asks to quit
     running = True
     while running:
-        print("Total time: %2d" % (score))
+
+        # Fill the background with white
+        screen.fill((250, 250, 250))
+
+        click = False
+        # Did the user click the window close button?
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        mx, my = pygame.mouse.get_pos()
+
+        exit_button = pygame.Rect(50, 200, 200, 50)
+        if exit_button.collidepoint((mx, my)):
+            if click:
+                start()
+
+        pygame.draw.rect(screen, (0, 0, 0), exit_button)
+
+        pygame.display.update()
+
+
+def game_over(score):
+    comp_level_sound = mixer.Sound('Finished Level (1).wav')
+    comp_level_sound.play(-1)
+    print("Total time: %2d" % score)
+    # Run until the user asks to quit
+    running = True
+    while running:
 
         # Fill the background with white
         screen.fill((250, 250, 250))
