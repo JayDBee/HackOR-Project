@@ -104,8 +104,6 @@ def main():
                 elif event.key == K_DOWN:
                     mainChar.changed_y = .6
                 elif event.key == K_ESCAPE:
-                    total_ticks = pygame.time.get_ticks()
-                    print("Total time: %2d" % (total_ticks - start_ticks))
                     running = False
 
             # Key lifts
@@ -116,6 +114,8 @@ def main():
                     mainChar.changed_y = 0
 
         if mainChar.collided(obstacle):
+            total_ticks = pygame.time.get_ticks()
+            game_over(total_ticks - start_ticks)
             print("Finished!")
 
         render(mainChar)
@@ -129,7 +129,34 @@ def main():
         pygame.display.update()
 
 
-# def game_over():
+def game_over(score):
+    # Run until the user asks to quit
+    running = True
+    while running:
+        print("Total time: %2d" % (score))
+
+        # Fill the background with white
+        screen.fill((250, 250, 250))
+
+        click = False
+        # Did the user click the window close button?
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        mx, my = pygame.mouse.get_pos()
+
+        exit_button = pygame.Rect(50, 200, 200, 50)
+        if exit_button.collidepoint((mx, my)):
+            if click:
+                start()
+
+        pygame.draw.rect(screen, (0, 0, 0), exit_button)
+
+        pygame.display.update()
 
 ''''
 ----------------------------------------loops for menu screens-----------------------------
