@@ -1,12 +1,6 @@
 import Objects_and_stuff
 import pygame
 
-running = True
-screen = pygame.display.set_mode((Objects_and_stuff.main_room.length, Objects_and_stuff.main_room.width))
-select = 0
-HP = 100
-EHP = 100
-
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -16,6 +10,12 @@ from pygame.locals import (
     K_z,
     K_x,
 )
+
+running = True
+screen = pygame.display.set_mode((Objects_and_stuff.main_room.length, Objects_and_stuff.main_room.width))
+select = 0
+HP = 100
+EHP = 100
 
 
 while running:

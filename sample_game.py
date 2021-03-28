@@ -148,7 +148,6 @@ def battle_system():
         # Fill the background with white
         screen.fill((250, 250, 250))
 
-        click = False
         # Did the user click the window close button?
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -157,14 +156,7 @@ def battle_system():
                 if event.button == 1:
                     click = True
 
-        mx, my = pygame.mouse.get_pos()
-
-        exit_button = pygame.Rect(50, 200, 200, 50)
-        if exit_button.collidepoint((mx, my)):
-            if click:
-                start()
-
-        pygame.draw.rect(screen, (0, 0, 0), exit_button)
+        # code
 
         pygame.display.update()
 
